@@ -5,6 +5,7 @@ import Login from './pages/Login';
 import CategoryFiltered from './pages/CategoryFiltered';
 import Favorites from './pages/Favorites';
 import Home from './pages/Home';
+import Edit from './pages/Edit';
 
 const Routes = ({memories,inputSearch,setMemories}) => {
     return (
@@ -24,6 +25,9 @@ const Routes = ({memories,inputSearch,setMemories}) => {
             </Route>
             <Route path='/create'>
                 <Create  setMemories={setMemories}/>
+            </Route>
+            <Route path="/edit/:id">
+                <Edit setMemories={setMemories}/>
             </Route>
 
                

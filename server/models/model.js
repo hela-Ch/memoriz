@@ -13,13 +13,14 @@ const memorySchema = new Schema ({
     category: {
         type: String,
         required: true,
-        //default: "general"
     },
     date: {
         type: String,
     },
     img: {
-        type: String,
+
+       url:{ type: String},
+       cloudinary_id : { type: String}
         
     },
     like:{

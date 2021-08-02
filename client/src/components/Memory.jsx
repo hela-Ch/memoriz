@@ -1,6 +1,12 @@
 import noImage from '../unnamed.png';
 import React from 'react';
+import {Link} from 'react-router-dom'
 import {modifyData,deleteData} from '../utils';
+
+const changeFormatDate = (stringDate)=>{
+    const newDate = stringDate.split('/').join('-');
+    return newDate;
+}
 
 const Memory = ({memory,handleChangeOnMeories,setMemories}) => {
    
@@ -34,7 +40,7 @@ const Memory = ({memory,handleChangeOnMeories,setMemories}) => {
                     </div>  
                     {memory.img && memory.img !== "undefined" ?
                         <img 
-                              src={`http://localhost:9000/uploads/${memory.img}`}
+                              src={memory.img.url}
                               alt={memory.title}
                               className="h-15 w-full"
                         // eslint-disable-next-line jsx-a11y/img-redundant-alt
@@ -51,15 +57,16 @@ const Memory = ({memory,handleChangeOnMeories,setMemories}) => {
                     </div>
 
                     <div className="flex item-center justify-center">
-                                        
-                         <div 
+                           {/*redirection to the edit page*/}           
+                        <Link 
+                              to = {`/edit/${memory._id}`}
                               className="w-4 mr-2 transform hover:text-purple-500 hover:scale-110"
-                              onClick={() =>alert("Construction in progress")}
-                         >     
+                        >     
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                                 </svg>
-                         </div>
+                        </Link>
+
                          <div 
                                 className="w-4 mr-2 transform hover:text-purple-500 hover:scale-110"
                               
@@ -69,7 +76,7 @@ const Memory = ({memory,handleChangeOnMeories,setMemories}) => {
                                     const data = await deleteData(memory);
                                     data === 200 && setMemories(prevState => {
                                                                      console.log(prevState);
-                                                                     const newState =prevState.filter(elt => elt._id != memory._id);
+                                                                     const newState =prevState.filter(elt => elt._id !== memory._id);
                                                                      return [...newState];
 
                                })}}
@@ -85,7 +92,7 @@ const Memory = ({memory,handleChangeOnMeories,setMemories}) => {
 
                 <div className="px-5 py-4 flex justify-between">
                         <span className="inline-block shadow-inner bg-gray-300 rounded-full px-3 py-1 text-sm font-semibold text-grey-darker mr-2">#{memory.category}</span>
-                        <span className=" underline inline-block bg-gray-100 rounded-full px-3 py-1 text-sm  text-grey-darker mr-2">{memory.date}</span>
+                        <span className=" underline inline-block bg-gray-100 rounded-full px-3 py-1 text-sm  text-grey-darker mr-2">{new Date(changeFormatDate(memory.date)).toLocaleDateString("en-GB")}</span>
                         
                 </div>
          </div>

@@ -1,84 +1,115 @@
-const express = require("express");
-const router = express.Router();
-const multer = require("multer");
-const path = require ("path");
+const router = require("express").Router();
+const multer = require('../middleware/multer-config'); 
+const cloudinary = require('../config/cloudinary');
+//const path = require ("path");
 const mongoose = require ("mongoose");
 const Memories = require("../models/model");
 
-const storage = multer.diskStorage({
-   destination: function(req,file,cb){
-        cb(null,'uploads/');
-    },
-   
-    filename :function(req,file,cb){
-      cb(null,file.originalname);
-
-    }});
-const upload = multer({storage: storage});
 
 
-// request get all memories
+/*
+       *** request to get all memories ***
+*/
 router.get("/posts",async(req,res) => {
     try{
-       const memories = await Memories.find()
-       const data = res.send(memories);
-       return data;
-    }catch(err){res.status(400).json(`error : ${err}`)};
+       const memories = await Memories.find();
+       res.json(memories);  
+    }catch(err){
+        res.status(400).json(`error : ${err}`)
+    }
 });
 
-//request add new memory
-router.post("/" , upload.single('img'),async (req,res) => {
-
-    console.log(req.file);
-    const {title,description,category,date,like} = req.body;
-    const img = req.file.filename;
-    console.log(img);
-    let newMemory = new Memories ({title,description,category,date,img,like});
-   try{
-     newMemory = await newMemory.save();
-     const data = res.send(newMemory);
-     console.log(data);
-     return data ;
-   }catch(err){ res.status(400).json(`error : ${err}`)};
-
-
+/*
+       *** request to get One memory ***
+*/
+router.get("/:id",async(req,res) => {
+    try{
+       const memory = await Memories.findById(req.params.id);
+       //console.log(memory) ;
+       res.json(memory);    
+    }catch(err){
+        res.status(400).json(`error : ${err}`)
+    }
 });
 
-//upload a memory
-router.put('/:id' , upload.single('img'), async (req,res) => {
+
+
+
+/*
+        *** request to add new memory ***
+*/
+router.post("/" , multer.single('image'), async (req,res) => {
+    try{
+        //upload image to cloudinary
+            const result = await cloudinary.uploader.upload(req.file.path,{
+                                folder: 'memories'
+                        });
+            let newMemory = new Memories ({
+                ...req.body,
+                img: {
+                    url:result.secure_url,
+                    cloudinary_id : result.public_id
+                }    
+            });
+            //save memory 
+            await newMemory.save();
+            res.json(newMemory);  
+    }catch(error){ 
+        res.status(400).json(`error : ${error}`)
+    }
+})
+
+/*
+         *** update a memory ***
+*/
+router.put('/:id' , multer.single('image'), async (req,res) => {
      try{
-         console.log(req);
-   
-       let memory = await Memories.findOne({ _id :req.params.id})
-          
-                memory.title = req.body.title,
-                memory.description = req.body.description,
-                memory.like = req.body.like,
-                memory.date =req.body.date,
-                memory.img = req.body.img,
-            console.log(memory.image);
          
-       const memoryModified = await memory.save();
-       console.log(memoryModified);
-       const data = res.send(memoryModified);
-          console.log(data);
-       return data ;
-    }catch(err){res.status(400).json(`error : ${err}`)};
+         let memory = await Memories.findById(req.params.id);
+         let result;
+         // if the user send a new image , we delete the old one and upload the new one to cloudinary
+         if(req.file){
+            await cloudinary.uploader.destroy(memory.img.cloudinary_id);
+            result = await cloudinary.uploader.upload(req.file.path,{
+                folder: 'memories'
+            });
+         }
+         
+         const modifiedMemory = {
+         title : req.body.title || memory.title,
+         description : req.body.description,
+         date : req.body.date,
+         category : req.body.category,
+         like : req.body.like,
+         img : result? {url:result.secure_url,
+                        cloudinary_id : result.public_id }  : memory.img
+         }
+        memory = await  Memories.findByIdAndUpdate(req.params.id, modifiedMemory, { new: true });
+        res.json(memory);    
+    } catch(error){ 
+        res.status(400).json(`error : ${error}`)
+    }
         
 })
 
-//delete a memory
-router.delete('/:id' , upload.single('img'), async (req,res) => {
+/* 
+           *** delete a memory *** 
+*/
+router.delete('/:id' ,  multer.single('image'), async (req,res) => {
     try{
+        const memoryToDelete = await Memories.findById(req.params.id);
 
-    const deleteMem = await Memories.findByIdAndRemove(req.params.id);
-    console.log(deleteMem);
-    res.status(200).json("done");
-   
-    }catch(err){ res.status(400).json(`error : ${err}`)};
-   
+        if(memoryToDelete.img.cloudinary_id){
+        //delete image from cloudinary
+        await cloudinary.uploader.destroy(memoryToDelete.img.cloudinary_id);
+        }
+
+        //delete memory from db
+        await memoryToDelete.remove();
+        res.status(200).json("done");
+    }catch(error){ 
+        res.status(400).json(`error : ${error}`)
+    }  
 })
-
-
 
 module.exports = router;

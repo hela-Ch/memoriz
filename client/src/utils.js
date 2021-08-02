@@ -1,18 +1,37 @@
 
+/*
+   ** get all the momries
+*/
 export const getData = async () => {
   try{
    const res = await fetch("http://localhost:9000/posts");
    const data = await res.json();
-   console.log(data);
    return data;
-  }catch(error){console.log("oups error")}
+  }catch(err){
+    console.log(`oups error ${err}`)
+  }
               
 }
 
+/*
+    ** get one memory
+*/
+export const getOneMemory = async (memoryId) =>{
+      try{
+        const res = await fetch(`http://localhost:9000/${memoryId}`);
+        const data = await res.json();  
+        return data;
+      } catch(err){
+        console.log(`oups error ${err}`)
+      }
+}
 
+/*
+     ** add a memory
+*/
 export const postData = async (newMemory) => {
     let data = new FormData();
-    data.append("img" ,newMemory.img);
+    data.append("image" ,newMemory.img);
     data.set("title" ,newMemory.title);
     data.set("description",newMemory.description);
     data.set("date",newMemory.date);
@@ -26,41 +45,50 @@ export const postData = async (newMemory) => {
   const newData = await res.json();
   return newData ;
   } 
-  catch(err){ console.log(`oups error ${err}`)};
-
+  catch(err){ 
+    console.log(`oups error ${err}`)
+  }
 }
 
-
+/*
+    ** update a memory
+*/    
 export const modifyData = async (memoryToModify) =>{
-     let data = new FormData();
-    data.append("img" ,memoryToModify.img);
+    let data = new FormData();
+    //check if the user change the image
+    if(memoryToModify.hasOwnProperty('img')){
+       data.append("image" ,memoryToModify.img);
+    }
+    data.set("like" ,memoryToModify.like);
     data.set("title" ,memoryToModify.title);
     data.set("description",memoryToModify.description);
     data.set("date",memoryToModify.date);
-    data.set("like",memoryToModify.like);
     data.set("category",memoryToModify.category);
     try{
-      const res = await fetch ("http://localhost:9000/"+memoryToModify._id, {
+      const res = await fetch (`http://localhost:9000/${memoryToModify._id}`, {
                 method: 'PUT',
                 body: data,
               })
-              console.log(memoryToModify._id);
-  const memoryModified = await res.json();
-  console.log(memoryModified);
-  return memoryModified ;
-   }catch(err){ console.log(`oups error ${err}`)};
+      const memoryModified = await res.json();
+      return memoryModified ;
+   }catch(err){ 
+     console.log(`oups error ${err}`)
+   }
 
 }
 
+/*
+     ** delete a memory
+*/     
 export const deleteData = async (memoryToModify) =>{
   try{
       const res = await fetch (`http://localhost:9000/${memoryToModify._id}`, {
              method: 'DELETE',
-           })
-           
+           })     
       return res.status;
-  }catch(err){ console.log(`oups error ${err}`)};
-
+  }catch(err){ 
+    console.log(`oups error ${err}`)
+  }
 }
 
 

@@ -49,7 +49,6 @@ return (
         <h1 className="text-2xl font-semibold mb-8 text-center uppercase tracking-wider ">Create a new memory</h1>
         <form  onSubmit = { async e => {
                                  e.preventDefault();
-                                 //console.log(state.picture);
                                  if(!state.title || !state.date ||!state.category|| !state.description||!state.picture){
                                      dispatch({type:"Errors",payload: {
                                         errorTitle: !state.title,
@@ -63,11 +62,12 @@ return (
                                     const newMemory = {
                                         title: state.title,
                                         description: state.description,
-                                        date: new Date(state.date).toLocaleDateString("en-GB"),
+                                        date: state.date,
                                         like: false,
                                         category: state.category,
                                         img: state.picture
                                     }
+                                    //request to post a new memory
                                     postData(newMemory)
                                       .then(data => setMemories(prevState => [...prevState,data]));
                                     history.push('/');
@@ -78,7 +78,7 @@ return (
         >
             
             <div className="relative z-0 w-full mb-5">
-            <label htmlFor="task" className="absolute duration-300 top-3 -z-1 origin-0 text-gray-500">Title</label>
+            <label htmlFor="MemoryTitle" className="absolute duration-300 top-3 -z-1 origin-0 text-gray-500">Title</label>
                 <input
                     type="text"
                     name="memoryTitle"
@@ -92,7 +92,7 @@ return (
             </div>
 
             <div className="relative z-0 w-full mb-5">
-                <label htmlFor="description" className="absolute duration-300 top-3 -z-1 origin-0 text-gray-500">Description</label>
+                <label htmlFor="memoryDescription" className="absolute duration-300 top-3 -z-1 origin-0 text-gray-500">Description</label>
                 <textarea
                     name="memoryDescription"
                     id="memoryDescription"
@@ -110,6 +110,7 @@ return (
                 <label htmlFor="select" className="absolute duration-300 top-3 -z-1 origin-0 text-gray-500 pb-5 mb-3">Category</label>
                 <select
                     name="select"
+                    id="select"
                     value={state.category}
                     onChange={e => dispatch({type:"handleCategory" , value: e.target.value})}
                     className="pt-5 block w-full px-0 mt-5  bg-transparent border-0 border-b-2  z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200"
@@ -124,10 +125,10 @@ return (
 
             
             <div className="relative z-0 w-full mb-5">
-                <label htmlFor="deadline" className="absolute duration-300 top-3 -z-1 origin-0 text-gray-500">Date</label>
+                <label htmlFor="memoryDate" className="absolute duration-300 top-3 -z-1 origin-0 text-gray-500">Date</label>
                     <input
                         type="date"
-                        name="emoryDate"
+                        name="memoryDate"
                         id="memoryDate"
                         value={state.date}
                         onChange={e => dispatch({type:"handleDate" , value: e.target.value})}
@@ -137,14 +138,14 @@ return (
                    {state.errorDate &&<span className="text-sm text-red-600">Date is required</span>}
             </div>
             <div className="relative z-0 w-full mb-5">
-                <label htmlFor="task" className="absolute duration-300 top-3 -z-1 origin-0 text-gray-500 mb-2">Picture</label>
+                <label htmlFor="image" className="absolute duration-300 top-3 -z-1 origin-0 text-gray-500 mb-2">Picture</label>
                     <input
                          type="file"
                          accept="image/*"
                          //multiple={false} 
                          onChange={e => dispatch({type:"handlePictures" , value:e.target.files[0]})}
-                         name="img"
-                         id="img"
+                         name="image"
+                         id="image"
                         
                         className=" pt-5 pb-0 block w-full px-0 mt-2 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0  border-gray-200"
                     />

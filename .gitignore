@@ -1,0 +1,9 @@
+# dotenv environment variables file
+.env
+
+# dependencies
+node_modules/
+
+user.js/
+auth.js/
+

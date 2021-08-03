@@ -1,16 +1,6 @@
 const multer = require ('multer');
 const path = require("path");
-/*const storage = multer.diskStorage({
-     destination:(req,file,callback)=>{
-            callback(null,'uploads')
-     },
-     filename:(req,file,callback)=>{
-         const name = file.originalname.split(' ').join('_');
-         const extension = file.mimetype.split('/')[1];
-         callback(null,name+Date.now()+'.'+extension)
 
-     }
-})*/
 module.exports = multer({
     storage: multer.diskStorage({}),
     fileFilter: (req, file, cb) => {
@@ -21,5 +11,5 @@ module.exports = multer({
       }
       cb(null, true);
     },
-  });
+  })
 

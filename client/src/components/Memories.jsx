@@ -1,8 +1,6 @@
 import React from 'react';
 import Memory from './Memory.jsx';
 
-
-
 const Memories = ({memories,inputSearch,setMemories}) => {
 
     return (

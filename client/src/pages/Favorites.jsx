@@ -9,7 +9,5 @@ const Favorites = ({memories,inputSearch,setMemories})=> {
         {<Memories memories ={favoritesMemories} inputSearch={inputSearch} setMemories={setMemories}/>}
         </> 
     )
-   
-
 }
 export default Favorites;

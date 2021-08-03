@@ -13,23 +13,19 @@ const App = () => {
     const [successLoading,setSuccessLoading] = useState(false);
     const[inputSearch,setInputSearch] = useState("");
 
-     
-       
-  
+    useEffect(()=>
+        getData().then(data => {
+                                  setMemories(data);
+                                  setSuccessLoading(true)
+                      })
+      
+    ,[]);
 
-  useEffect(()=>
-    getData().then(data => {
-                              setMemories(data);
-                              setSuccessLoading(true)
-                   })
-   
-  ,[]);
-
-     if(!successLoading){
+    if(!successLoading){
         return (
             <Loader />
         )
-     }else{
+    }else{
         return (
                 <>
               
@@ -40,6 +36,6 @@ const App = () => {
                 </>
         )  
               
-      }
+    }
 }   
 export default App;

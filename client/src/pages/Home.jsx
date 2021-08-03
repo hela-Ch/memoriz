@@ -5,12 +5,10 @@ const Home = ({memories,inputSearch,setMemories}) => {
     return (
         (memories.length > 0 ? 
   
-    
             <Memories memories={memories} inputSearch={inputSearch} setMemories={setMemories}/>
             : 
             <EmptyPage/>
         )
     )
-
 }
 export default Home;

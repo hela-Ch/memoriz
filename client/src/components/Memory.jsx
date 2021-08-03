@@ -30,7 +30,7 @@ const Memory = ({memory,handleChangeOnMeories,setMemories}) => {
                                                              )
                                                                      
                                                        
-                            /*like /dislike the mrmory */             
+                            /*like /dislike the memory */             
                                 } }     
                             >
                         <path 

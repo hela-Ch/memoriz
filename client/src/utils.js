@@ -9,21 +9,20 @@ export const getData = async () => {
    return data;
   }catch(err){
     console.log(`oups error ${err}`)
-  }
-              
+  }              
 }
 
 /*
     ** get one memory
 */
 export const getOneMemory = async (memoryId) =>{
-      try{
+    try{
         const res = await fetch(`http://localhost:9000/${memoryId}`);
         const data = await res.json();  
         return data;
-      } catch(err){
+    } catch(err){
         console.log(`oups error ${err}`)
-      }
+    }
 }
 
 /*
@@ -38,14 +37,13 @@ export const postData = async (newMemory) => {
     data.set("like", newMemory.like);
     data.set("category",newMemory.category);
   try{
-   const res = await fetch ('http://localhost:9000', {
-                method: 'POST',
-                body: data,    
-              })
-  const newData = await res.json();
-  return newData ;
-  } 
-  catch(err){ 
+    const res = await fetch ('http://localhost:9000', {
+                  method: 'POST',
+                  body: data,    
+                })
+    const newData = await res.json();
+    return newData ;
+  }catch(err){ 
     console.log(`oups error ${err}`)
   }
 }

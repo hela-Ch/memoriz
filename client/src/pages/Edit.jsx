@@ -12,13 +12,11 @@ const Edit = ({setMemories}) =>{
     const [newPicture,setNewPicture] = useState(false);
       
     useEffect(()=> {
-        //console.log(useParams());
-        getOneMemory(id).then(data => {
+            getOneMemory(id).then(data => {
                               setMemory(data);
-                              //memory.date = changeFormatDate(memory.date);
-                              //console.log(memory);
-                         })}
-              ,[]);
+                         })
+            }
+            ,[]);
 
    const handleChange=(event)=>{
        setMemory({...memory,[event.target.id]: event.target.value});
@@ -65,7 +63,7 @@ const Edit = ({setMemories}) =>{
                     id="title"
                     className=" pt-5 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-black border-gray-200"
                     value={memory.title}
-                    onChange={e =>  handleChange(e)}
+                    onChange={e => handleChange(e)}
                 />
             </div>
 

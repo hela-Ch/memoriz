@@ -1,7 +1,6 @@
 const router = require("express").Router();
 const multer = require('../middleware/multer-config'); 
 const cloudinary = require('../config/cloudinary');
-//const path = require ("path");
 const mongoose = require ("mongoose");
 const Memories = require("../models/model");
 
@@ -25,15 +24,11 @@ router.get("/posts",async(req,res) => {
 router.get("/:id",async(req,res) => {
     try{
        const memory = await Memories.findById(req.params.id);
-       //console.log(memory) ;
        res.json(memory);    
     }catch(err){
         res.status(400).json(`error : ${err}`)
     }
 });
-
-
-
 
 /*
         *** request to add new memory ***

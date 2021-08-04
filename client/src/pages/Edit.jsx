@@ -43,10 +43,15 @@ const Edit = ({setMemories}) =>{
                                     }
                                     //request to modify the memory
                                     modifyData (modifiedMemory)
-                                      .then(data => setMemories(prevState => {
-                                           prevState.splice(prevState.indexOf(data._id),1,data);
-                                          return [...prevState];
-                                          }));
+                                    .then (data => setMemories(prevState => {
+                                        const newState = prevState.map(elt=> {
+                                            if(elt._id === data._id){
+                                                elt = {... data}
+                                            }
+                                            return elt;
+                                        })
+                                       return [...newState];
+                                       }))
                                     history.push('/');
                                     
                                  }

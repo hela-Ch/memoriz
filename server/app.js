@@ -6,8 +6,9 @@ const router = require ("./routes/routes");
 const path = require('path');
 
 const app = express ();
+app.use(express.json());
+app.use(cors());
 
-const port = process.env.PORT || 9000;
 
 //connect to mongoose server
 mongoose
@@ -16,26 +17,16 @@ mongoose
      useUnifiedTopology: true , 
      useFindAndModify: false 
     })
-  .then(() => console.log("mongoDB is connected"))
+  .then(() => console.log("connected to mongoDB"))
   .catch((err) => console.log(err));
 
-
-app.use(express.json());
-app.use(cors());
 
 //routing
 app.use('/', router);
 app.use('/posts', router);
 app.use('/:id',router);
 
-//serve static assets if in production
-if(process.env.NODE_ENV === 'production'){
-   //set static folder
-   app.use(express.static(path.resolve(__dirname, "./client/build")));
-   app.get('*',(req,res) => {
-     res.sendFile(path.resolve(__dirname, './client/build', 'index.html'));
-   });
-  }   
 
 //start listening to the server
+const port = process.env.PORT || 9000;
 app.listen(port, () => console.log(`server listening on ${port}`));

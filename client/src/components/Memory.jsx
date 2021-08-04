@@ -75,7 +75,6 @@ const Memory = ({memory,handleChangeOnMeories,setMemories}) => {
                                     //delete a memory
                                     const data = await deleteData(memory);
                                     data === 200 && setMemories(prevState => {
-                                                                     console.log(prevState);
                                                                      const newState =prevState.filter(elt => elt._id !== memory._id);
                                                                      return [...newState];
 
